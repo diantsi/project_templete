@@ -24,6 +24,12 @@ def test_input_from_file_success(setup_text_file):
     content = input_from_file(setup_text_file)
     assert content == "Bombordini crocodili"
 
+def test_input_from_file_not_found():
+    """Test FileNotFoundError is raised when file doesn't exist"""
+    with pytest.raises(FileNotFoundError):
+        input_from_file("nonexistent_file.txt")
+
+
 
 def test_input_from_file_by_pandas_success(setup_csv_file):
     """Test reading from csv file"""
@@ -33,3 +39,8 @@ def test_input_from_file_by_pandas_success(setup_csv_file):
     assert df["1"].tolist() == [1, 2]
     assert df["2"].tolist() == ["a", "b"]
 
+
+def test_input_from_file_by_pandas_not_found():
+    """Test FileNotFoundError is raised when file doesn't exist"""
+    with pytest.raises(FileNotFoundError):
+        input_from_file_by_pandas("nonexistent_file.csv")
