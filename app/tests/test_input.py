@@ -29,7 +29,12 @@ def test_input_from_file_not_found():
     with pytest.raises(FileNotFoundError):
         input_from_file("nonexistent_file.txt")
 
-
+def test_input_from_file_empty(tmp_path):
+    """Test reading empty file"""
+    file_path = tmp_path / "empty.txt"
+    file_path.write_text("")
+    content = input_from_file(file_path)
+    assert content == ""
 
 def test_input_from_file_by_pandas_success(setup_csv_file):
     """Test reading from csv file"""
@@ -39,6 +44,13 @@ def test_input_from_file_by_pandas_success(setup_csv_file):
     assert df["1"].tolist() == [1, 2]
     assert df["2"].tolist() == ["a", "b"]
 
+
+def test_input_from_file_by_pandas_not_csv(tmp_path):
+    """Test ValueError is raised when file is not csv"""
+    file_path = tmp_path / "test.txt"
+    file_path.write_text("Bombini gusini")
+    with pytest.raises(ValueError, match="File should be csv"):
+        input_from_file_by_pandas(str(file_path))
 
 def test_input_from_file_by_pandas_not_found():
     """Test FileNotFoundError is raised when file doesn't exist"""
